@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <canvas id="updating-chart" width="10" height="10"></canvas>
+
+<script>
+
+var canvas = document.getElementById('updating-chart'),
+ctx = canvas.getContext('2d'),
+startingData = {
+  labels: [1],
+  datasets: [
+      {
+          fillColor: "rgba(220,220,220,0.2)",
+          strokeColor: "rgba(220,220,220,1)",
+          pointColor: "rgba(220,220,220,1)",
+          pointStrokeColor: "#fff",
+          data: [6]
+      }
+  ]
+
+};
+latestLabel = startingData.labels[0];
+// Reduce the animation steps for demo clarity.
+var myLiveChart = new Chart(ctx,{
+  type: 'line',
+  data: startingData
+});
+
+
+const url = 'https://api.wheretheiss.at/v1/satellites/25544';
+async function get_data() {
+    let response = await fetch(url)
+    const data = await response.json();
+    //console.log(data.latitude);
+    return data;
+}
+
+
+
+
+setInterval(async function(){
+  // Get a random index point
+  let iss_data = await get_data();//Math.round(Math.random() * startingData.labels.length);
+    console.log(iss_data.latitude);
+  myLiveChart.data.labels.push(++latestLabel)
+  myLiveChart.data.datasets[0].data.push(iss_data.latitude);
+  //myLiveChart.data.datasets[0].data.addData([Math.random() * 100], ++latestLabel);
+  //myLiveChart.data.datasets[0].data.shift();
+
+  myLiveChart.update();
+}, 1000);
+
+
+
+</script>
+
+
+
+</body>
+</html>

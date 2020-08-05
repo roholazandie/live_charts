@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+     <br>
+    <br>
+    <br>
+    <br>
+
+
+
+<body>
+
+<div class="ui centered grid">
+    <form class="ui form" method="POST" action="">
+        {% csrf_token %}
+
+      <div class="field">
+        <label>Starting Number:</label>
+        <input type="text" name="start-number" placeholder="Start">
+      </div>
+      <div class="field">
+        <label>End Number:</label>
+        <input type="text" name="end-number" placeholder="End">
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" tabindex="0" class="hidden">
+          <label>I agree to the Terms and Conditions</label>
+        </div>
+      </div>
+      <button class="ui button" type="submit" id="submit">Submit</button>
+    </form>
+
+
+</div>
+
+
+    <canvas id="updating-chart" width="10" height="10"></canvas>
+
+
+{% if job_id %}
+  <script>
+
+
+
+
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie != '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = jQuery.trim(cookies[i]);
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+
+
+      const url = 'http://127.0.0.1:8000/random_generator/fetch_progress';
+
+      async function get_data() {
+          let response = await fetch(url, {
+              method: 'POST',
+              credentials: "same-origin",
+              headers: {
+                  "X-CSRFToken": getCookie("csrftoken"),
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                        'job_id': "{{job_id}}",
+                })
+          })
+          const data = await response.json();
+          console.log(data)
+          return data;
+      }
+
+
+    var canvas = document.getElementById('updating-chart'),
+    ctx = canvas.getContext('2d'),
+    startingData = {
+        labels: [1],
+        datasets: [
+            {
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                data: [6]
+            }
+        ]
+
+    };
+  latestLabel = startingData.labels[0];
+
+    var myLiveChart = new Chart(ctx, {
+        type: 'line',
+        data: startingData
+    });
+
+    setInterval(async function() {
+        let recieved_data = await get_data();
+        if(recieved_data.state === "PROGRESS"){
+            console.log(recieved_data.data.rand_value);
+            myLiveChart.data.labels.push(++latestLabel)
+            myLiveChart.data.datasets[0].data.push(recieved_data.data.rand_value);
+
+            myLiveChart.update();
+        }
+
+    }, 100);
+
+
+
+
+
+
+  </script>
+
+{% endif %}
+
+
+
+</body>
+
+
+
+{% endblock %}
+

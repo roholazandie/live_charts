@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    const url = 'https://api.wheretheiss.at/v1/satellites/25544';
+
+
+    async function get_data(){
+        let response = await fetch(url)
+        const data = await response.json();
+        console.log(data.latitude)
+    }
+
+    pollInterval = setInterval(function() {
+                      get_data();
+                      }, 1000);
+
+
+    //get_data();
+
+</script>
+</body>
+</html>

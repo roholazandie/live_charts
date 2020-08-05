@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.6/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.6/dist/semantic.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <meta charset="UTF-8">
+    <title>Mining Tools</title>
+</head>
+<body class="started pushable" ontouchstart="">
+
+    <div class="ui vertical inverted sidebar menu left" id="toc">
+
+
+        <div class="item">
+          <div class="header">Simple Statistics Tools</div>
+          <div class="menu">
+
+              <a class="item" href="/simplestatisticstools/wordhistogram/">
+                Word Histogram
+              </a>
+
+              <a class="item" href="/simplestatisticstools/wordfrequency/">
+                Word Frequency Plot
+              </a>
+
+              <a class="item" href="/simplestatisticstools/wordcloud/">
+                Word Cloud
+              </a>
+          </div>
+        </div>
+        <div class="item">
+          <div class="header">Topic Modeling</div>
+          <div class="menu">
+
+              <a class="item" href="/topicmodeling/lsi_network/">
+                Latent semantic analysis
+              </a>
+
+              <a class="item" href="/topicmodeling/lds_network">
+                Latent dirichlet analysis
+              </a>
+
+          </div>
+        </div>
+        <div class="item">
+
+          <div class="header">Trend Mining</div>
+
+          <div class="menu">
+
+              <a class="item" href="/trendmining/trend_analysis">
+                Trend Analysis
+
+              </a>
+
+
+              <a class="item" href="/trendmining/topics_over_time">
+                Topics over time
+
+              </a>
+
+          </div>
+        </div>
+
+
+
+
+</div>
+
+
+    <div class="ui fixed inverted main menu">
+        <div class="left menu"{% comment %}"ui container"{% endcomment %}>
+            <a class="launch icon item" id="toggle-btn">
+                <i class="content icon"></i>
+
+            </a>
+            <div class="item">
+                Bio Text Mining Toolbox
+            </div>
+        </div>
+
+        <div class="right menu">
+            <a class="launch icon item">
+                <i class="home icon"></i>
+
+            </a>
+
+        </div>
+    </div>
+
+    <div class="pusher">
+        <!-- Site content !-->
+        <div class="container">
+            <div>
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    $(".ui.dropdown").dropdown({on:'hover'});
+    $("#toggle-btn").click(function() {$(".ui.sidebar").sidebar('toggle');});
+    $('.ui.checkbox').checkbox();
+
+
+</script>
+
+</body>
+</html>

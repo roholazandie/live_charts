@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+     <br>
+    <br>
+    <br>
+    <br>
+
+
+
+<body>
+
+<div class="ui centered grid">
+    <form class="ui form" method="POST" action="">
+        {% csrf_token %}
+
+      <div class="field">
+        <label>Starting Number:</label>
+        <input type="text" name="start-number" placeholder="Start">
+      </div>
+      <div class="field">
+        <label>End Number:</label>
+        <input type="text" name="end-number" placeholder="End">
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" tabindex="0" class="hidden">
+          <label>I agree to the Terms and Conditions</label>
+        </div>
+      </div>
+      <button class="ui button" type="submit" id="submit">Submit</button>
+    </form>
+
+
+</div>
+
+
+  <div id="myDiv" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+
+                <div id="prog" class="ui indicating progress active" data-percent="0">
+                  <div class="bar" style="transition-duration: 300ms;"></div>
+                  <div class="label">0%</div>
+                </div>
+
+{% if job_id %}
+  <script>
+        console.log("script");
+      function rand() {
+         return Math.random();
+        }
+
+
+        Plotly.newPlot('myDiv', [{
+              y: [1],//.map(rand),
+              mode: 'lines',
+              line: {color: '#cc0b99'}
+        }]);
+
+
+       jQuery(document).ready(function(){
+          var poll_xhr;
+
+          var poll = function(){
+          var json_dump = "{{ data }}";
+          var job_id = "{{job_id}}";
+
+
+          poll_xhr = $.ajax({
+            url:'/random_generator/update_progress',
+            type: 'POST',
+            data: {
+                job_id: job_id,
+                csrfmiddlewaretoken: "{{csrf_token}}",
+            },
+            success: function(result) {
+                console.log(result.state)
+                if(result.state === "PENDING"){
+                    //do nothing
+                }else{
+                    if(result.state === "PROGRESS"){
+                        try{
+                            console.log(result.data.rand_value)
+                             Plotly.extendTraces('myDiv', {
+                                            y: [[result.data.rand_value]]
+                                          }, [0])
+                        }
+                        catch (e){
+                            console.log(e)
+                        }
+
+
+                }else{
+                    if(result.state === "SUCCESS"){
+                    }
+                    else {
+                    }
+
+                    }
+                }
+
+
+                // create the infinite loop of Ajax calls to check the state
+                // of the current task
+                if (result.state!=="SUCCESS" && result.state!=="ABORTED"){
+
+                    /*pollInterval = setInterval(function() { // run function every 2000 ms
+                      poll();
+                      }, 1000);*/
+                    poll()
+
+                }
+            }
+          });
+    };
+
+      poll()
+
+  });
+
+
+
+
+
+
+
+  </script>
+
+{% endif %}
+
+
+
+</body>
+
+
+
+{% endblock %}
+
