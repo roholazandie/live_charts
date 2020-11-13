@@ -1,6 +1,16 @@
+![Alt Text](random.gif)
+
+
 # Live Chart
 In this repository you can find all sorts of live charts that stream data from the django backedn with Celery task manager
 and show the results in js plotly or Chats.js libraries.
+
+##Install
+Install the redis server:
+```
+sudo apt install redis-server
+```
+
 
 ##
 Run:
