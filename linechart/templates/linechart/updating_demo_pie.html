@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <canvas id="chart-area" width="10" height="10"></canvas>
+
+<script>
+var randomScalingFactor = function() {
+			return Math.round(Math.random() * 100);
+		};
+
+var ctx = document.getElementById('chart-area').getContext('2d');
+var config = {
+    type: 'pie',
+    data: {
+        datasets: [{
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+            ],
+            backgroundColor: [
+                window.chartColors.red,
+                window.chartColors.orange,
+                window.chartColors.yellow,
+                window.chartColors.green,
+                window.chartColors.blue,
+            ],
+            label: 'Dataset 1'
+        }],
+        labels: [
+            'Red',
+            'Orange',
+            'Yellow',
+            'Green',
+            'Blue'
+        ]
+    },
+    options: {
+        responsive: true
+    }
+};
+
+
+
+latestLabel = startingData.labels[0];
+
+window.onload = function() {
+    window.myPie  = new Chart(ctx, config);
+
+}
+
+const url = 'https://api.wheretheiss.at/v1/satellites/25544';
+async function get_data() {
+    let response = await fetch(url)
+    const data = await response.json();
+    //console.log(data.latitude);
+    return data;
+}
+
+
+
+
+/*setInterval(async function(){
+  // Get a random index point
+  let iss_data = await get_data();//Math.round(Math.random() * startingData.labels.length);
+    console.log(iss_data.latitude);
+  myLiveChart.data.labels.push(++latestLabel)
+  myLiveChart.data.datasets[0].data.push(iss_data.latitude);
+  //myLiveChart.data.datasets[0].data.addData([Math.random() * 100], ++latestLabel);
+  //myLiveChart.data.datasets[0].data.shift();
+
+  myLiveChart.update();
+}, 1000);*/
+
+
+
+</script>
+
+
+
+</body>
+</html>
